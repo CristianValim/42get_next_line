@@ -6,102 +6,119 @@
 /*   By: cvalim-d <cvalim-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 17:21:34 by cvalim-d          #+#    #+#             */
-/*   Updated: 2024/11/19 15:11:35 by cvalim-d         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:02:08 by cvalim-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+ssize_t	ft_read_file(int fd, char *buffer)
 {
-	char	*joined_str;
-	size_t	len1;
-	size_t	len2;
+	ssize_t	bytes_read;
 
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	joined_str = (char *)malloc((len1 + len2 + 1) * sizeof(char));
-	if (!joined_str)
-		return (NULL);
-	ft_strcpy(joined_str, s1);
-	ft_strcat(joined_str, s2);
-	return (joined_str);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+		buffer[0] = '\0';
+	else if (bytes_read > 0)
+		buffer[bytes_read] = '\0';
+	return (bytes_read);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strjoin(char *s1, char *s2)
 {
+	char	*result;
+	size_t	i;
+	size_t	j;
+
+	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (s1 && s1[i])
+	{
+		result[i] = s1[i];
+		i++;
+	}
+	free(s1);
+	j = 0;
+	while (s2[j])
+	{
+		result[i++] = s2[j];
+		if (s2[j++] == '\n')
+			break ;
+	}
+	result[i] = '\0';
+	return (result);
+}
+
+int	ft_new_line(char *buffer)
+{
+	char	*newline;
+	size_t	i;
+
+	newline = ft_strchr(buffer, '\n');
+	if (newline)
+	{
+		i = 0;
+		newline++;
+		while (*newline)
+			buffer[i++] = *newline++;
+		buffer[i] = '\0';
+		return (1);
+	}
+	i = 0;
+	while (buffer[i])
+		buffer[i++] = 0;
+	return (0);
+}
+
+char	*ft_strchr(char *s, int c)
+{
+	char	ch;
+
+	ch = (char)c;
 	while (*s)
 	{
-		if (*s == c)
+		if (*s == ch)
 			return ((char *)s);
 		s++;
 	}
-	if (c == '\0')
+	if (*s == ch)
 		return ((char *)s);
 	return (NULL);
 }
 
-char	*ft_strcpy(char *dest, const char *src)
+ssize_t	ft_strlen(char *str)
 {
 	size_t	i;
 
 	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
+	if (!str)
+		return (0);
+	while (str[i] && str[i] != '\n')
 		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-char	*ft_strdup(const char *src)
-{
-	char	*dup;
-	size_t	len;
-	size_t	i;
-
-	if (!src)
-		return (NULL);
-	len = ft_strlen(src);
-	dup = (char *)malloc((len + 1) * sizeof(char));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		dup[i] = src[i];
+	if (str[i] == '\n')
 		i++;
+	return (i);
+}
+
+/* int	main(void)
+{
+	char	*s1;
+	char	*s2;
+	char	*result;
+
+	s1 = "Hello, ";
+	s2 = "world!";
+	result = ft_strjoin(s1, s2);
+	if (result)
+	{
+		printf("Resultado: %s\n", result);
+		free(result);
 	}
-	dup[i] = '\0';
-	return (dup);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}
-
-char	*ft_strcat(char *dest, const char *src)
-{
-	char	*dest_start;
-
-	dest_start = dest;
-	while (*dest)
-		dest++;
-	while (*src)
-		*dest++ = *src++;
-	*dest = '\0';
-	return (dest_start);
-}
+	else
+	{
+		printf("Erro ao alocar memória.\n");
+	}
+	return (0);
+} */

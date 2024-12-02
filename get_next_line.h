@@ -6,7 +6,7 @@
 /*   By: cvalim-d <cvalim-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 18:18:48 by cvalim-d          #+#    #+#             */
-/*   Updated: 2024/11/19 15:11:49 by cvalim-d         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:01:01 by cvalim-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 # endif
 
 # include <fcntl.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
+ssize_t	ft_read_file(int fd, char *buffer);
+ssize_t	ft_strlen(char *str);
+char	*ft_strjoin(char *s1, char *s2);
 char	*get_next_line(int fd);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strcpy(char *dest, const char *src);
-char	*ft_strdup(const char *s);
-size_t	ft_strlen(const char *s);
-char	*ft_strcat(char *dest, const char *src);
+char	*ft_strchr(char *s, int c);
+int		ft_new_line(char *buffer);
 
 #endif
